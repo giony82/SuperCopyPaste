@@ -1,13 +1,6 @@
-﻿// ------------------------------------------------------------------------------
-//     <copyright file="FileUtility.cs" company="BlackLine">
-//         Copyright (C) BlackLine. All rights reserved.
-//     </copyright>
-// ------------------------------------------------------------------------------
-
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using Super_Copy_Paste;
 
 namespace SuperCopyPaste
 {
