@@ -10,3 +10,8 @@ In some organizations is not possible to install applications like Ditto Clipboa
 - Search
 - Pin items
 - Show only pinned items.
+
+# Shortcuts
+CTR - ENTER -> activates the application
+ALT - X -> closes the application
+DEL -> Deletes the current selected row
