@@ -53,8 +53,9 @@ namespace SuperCopyPaste
             get
             {
                 if (dataGridView.SelectedRows.Count == 1)
-                    
+                {
                     return (ClipboardItem) dataGridView.SelectedRows[0].DataBoundItem;
+                }
 
                 return null;
             }
@@ -88,12 +89,14 @@ namespace SuperCopyPaste
             const int WM_SYSKEYDOWN = 0x104;
 
             if (msg.Msg == WM_KEYDOWN || msg.Msg == WM_SYSKEYDOWN)
+            {
                 switch (keyData)
                 {
                     case Keys.Escape:
                         SendToTray();
                         return true;
                 }
+            }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -110,9 +113,13 @@ namespace SuperCopyPaste
 
         private void ClipboardMonitorClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
-            if (_suppressClipboardMonitoring) return;
+            if (_suppressClipboardMonitoring)
+            {
+                return;
+            }
 
-            var d = Clipboard.GetDataObject();
+            IDataObject d = Clipboard.GetDataObject();
+
             _clipboardDataManagement.AddClipboardData(d);
 
             dataGridView.Sort(createdDataGridViewTextBoxColumn, ListSortDirection.Descending);
