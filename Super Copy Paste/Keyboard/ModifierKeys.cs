@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SuperCopyPaste
+namespace SuperCopyPaste.Keyboard
 {
     /// <summary>The enumeration of possible modifiers.</summary>
     [Flags]

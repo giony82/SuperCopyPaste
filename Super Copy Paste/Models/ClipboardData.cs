@@ -1,4 +1,5 @@
 ﻿using System;
+using SuperCopyPaste.Core;
 
 namespace SuperCopyPaste.Models
 {

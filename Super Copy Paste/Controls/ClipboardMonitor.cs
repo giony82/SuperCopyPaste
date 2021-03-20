@@ -3,10 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using SuperCopyPaste;
 using SuperCopyPaste.Core;
 
-namespace Super_Copy_Paste
+namespace SuperCopyPaste.Controls
 {
     [DefaultEvent("ClipboardChanged")]
     public class ClipboardMonitor : Control
@@ -68,7 +67,7 @@ namespace Super_Copy_Paste
         {
             try
             {
-                var iData = Clipboard.GetDataObject();
+                IDataObject iData = Clipboard.GetDataObject();
                 ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(iData));
             }
             catch (Exception e)

@@ -1,6 +1,4 @@
-﻿
-using Super_Copy_Paste;
-using SuperCopyPaste.Controls;
+﻿using SuperCopyPaste.Controls;
 using SuperCopyPaste.Models;
 
 namespace SuperCopyPaste

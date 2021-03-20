@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using Super_Copy_Paste;
+using SuperCopyPaste.Controls;
 using SuperCopyPaste.Core;
+using SuperCopyPaste.Keyboard;
 using SuperCopyPaste.Models;
 using SuperCopyPaste.Properties;
 
@@ -43,7 +43,7 @@ namespace SuperCopyPaste
             _keyboardHook.KeyPressed += hook_KeyPressed;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
-            _keyboardHook.RegisterHotKey(SuperCopyPaste.ModifierKeys.Control, Keys.Enter);
+            _keyboardHook.RegisterHotKey(Keyboard.ModifierKeys.Control, Keys.Enter);
 
             dataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         }

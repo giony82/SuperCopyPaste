@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Super_Copy_Paste;
 
-namespace SuperCopyPaste
+namespace SuperCopyPaste.Keyboard
 {
     public sealed class KeyboardHook : IDisposable
     {
