@@ -17,4 +17,5 @@ In some organizations is not possible to install applications like Ditto Clipboa
 - DEL -> Deletes the current selected row
 
 # Screenshot
-![super copy paste](https://user-images.githubusercontent.com/16101625/111629629-2a870e80-87fa-11eb-9a19-6291f2d51fdf.png)
+![super copy paste](https://user-images.githubusercontent.com/16101625/111861356-4dc6d080-8956-11eb-9135-cd86df442c2e.png)
+
