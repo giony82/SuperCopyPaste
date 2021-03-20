@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Super_Copy_Paste;
+using SuperCopyPaste.Core;
+using SuperCopyPaste.Models;
+using SuperCopyPaste.Properties;
 
 namespace SuperCopyPaste
 {
@@ -20,6 +23,10 @@ namespace SuperCopyPaste
         private IntPtr _currentFocusedWindow;
 
         private bool _suppressClipboardMonitoring;
+
+        private const int ImageHeight = 150;
+
+        private const int TextHeight = 35;
 
         public MainForm()
         {
@@ -160,8 +167,12 @@ namespace SuperCopyPaste
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _clipboardDataManagement.Save();
-            Application.Exit();
+            if (MessageBox.Show(Resources.Are_you_sure_you_want_to_close_the_application, Resources.Super_Copy_Paste, MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _clipboardDataManagement.Save();
+                Application.Exit();
+            }
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -233,8 +244,12 @@ namespace SuperCopyPaste
         {
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
             {
-                var c = dataGridViewRow.DataBoundItem as ClipboardItem;
-                if (c != null) dataGridViewRow.Height = c.Data.ClipboardType == ClipboardType.Image ? 150 : 35;
+                if (dataGridViewRow.DataBoundItem is ClipboardItem c)
+                {
+                    var isImage = c.Data.ClipboardType == ClipboardType.Image;
+                    var height = isImage ? ImageHeight : TextHeight;
+                    dataGridViewRow.Height = height;
+                }
             }
         }
 
@@ -246,7 +261,8 @@ namespace SuperCopyPaste
             }
             catch (Exception err)
             {
-                Trace.WriteLine(err);
+                MessageBox.Show(string.Format(Resources.Cant_save_clipboard_data_0, err.Message),
+                    Resources.Super_Copy_Paste, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

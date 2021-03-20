@@ -1,7 +1,6 @@
 ﻿using System;
-using SuperCopyPaste;
 
-namespace Super_Copy_Paste
+namespace SuperCopyPaste.Models
 {
     [Serializable]
     public class ClipboardItem

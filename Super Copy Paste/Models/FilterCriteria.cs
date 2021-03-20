@@ -1,4 +1,4 @@
-﻿namespace SuperCopyPaste
+﻿namespace SuperCopyPaste.Models
 {
     public class FilterCriteria
     {

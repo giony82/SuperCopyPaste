@@ -114,4 +114,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Super_Copy_Paste" xml:space="preserve">
+    <value>Super Copy Paste</value>
+  </data>
+  <data name="Are_you_sure_you_want_to_close_the_application" xml:space="preserve">
+    <value>Are you sure you want to close the application?</value>
+  </data>
+  <data name="Cant_save_clipboard_data_0" xml:space="preserve">
+    <value>Can't save clipboard data: {0}</value>
+  </data>
 </root>

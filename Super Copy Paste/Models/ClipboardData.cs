@@ -1,7 +1,6 @@
 ﻿using System;
-using Super_Copy_Paste;
 
-namespace SuperCopyPaste
+namespace SuperCopyPaste.Models
 {
     [Serializable]
     public class ClipboardData
@@ -10,6 +9,6 @@ namespace SuperCopyPaste
 
         public object Image { get; set; }
 
-        public ClipboardType ClipboardType { get; set; }
+        public ClipboardType ClipboardType => Image != null ? ClipboardType.Image : ClipboardType.Text;
     }
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SuperCopyPaste;
+using SuperCopyPaste.Core;
 
 namespace Super_Copy_Paste
 {

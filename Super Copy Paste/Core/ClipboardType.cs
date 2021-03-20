@@ -1,4 +1,4 @@
-﻿namespace Super_Copy_Paste
+﻿namespace SuperCopyPaste
 {
     public enum ClipboardType
     {

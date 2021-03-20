@@ -1,5 +1,7 @@
 ﻿
 using Super_Copy_Paste;
+using SuperCopyPaste.Controls;
+using SuperCopyPaste.Models;
 
 namespace SuperCopyPaste
 {
@@ -34,14 +36,14 @@ namespace SuperCopyPaste
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.Data = new DataGridViewRolloverCellColumn();
+            this.Data = new SuperCopyPaste.DataGridViewRolloverCellColumn();
             this.createdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.txtBox = new System.Windows.Forms.TextBox();
+            this.txtBox = new SuperCopyPaste.Controls.CueTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.clipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -137,7 +139,7 @@ namespace SuperCopyPaste
             // bindingSource
             // 
             this.bindingSource.AllowNew = true;
-            this.bindingSource.DataSource = typeof(Super_Copy_Paste.ClipboardItem);
+            this.bindingSource.DataSource = typeof(ClipboardItem);
             // 
             // notifyIcon
             // 
@@ -149,6 +151,7 @@ namespace SuperCopyPaste
             // 
             // txtBox
             // 
+            this.txtBox.Cue = "Start typing to filter records";
             this.txtBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.txtBox.Location = new System.Drawing.Point(3, 548);
             this.txtBox.Name = "txtBox";
@@ -301,7 +304,7 @@ namespace SuperCopyPaste
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private DataGridViewRolloverCellColumn itemDataDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.TextBox txtBox;
+        private CueTextBox txtBox;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearAllToolStripMenuItem;

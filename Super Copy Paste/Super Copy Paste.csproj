@@ -242,22 +242,26 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClipboardChangedEventArgs.cs" />
-    <Compile Include="ClipboardData.cs" />
-    <Compile Include="ClipboardType.cs" />
-    <Compile Include="FilterCriteria.cs" />
+    <Compile Include="Core\ClipboardChangedEventArgs.cs" />
+    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Models\ClipboardData.cs" />
+    <Compile Include="Core\ClipboardType.cs" />
+    <Compile Include="Controls\CueTextBos.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Models\FilterCriteria.cs" />
     <Compile Include="ModifierKeys.cs" />
-    <Compile Include="ClipboardItem.cs" />
-    <Compile Include="ClipboardMonitor.cs">
+    <Compile Include="Models\ClipboardItem.cs" />
+    <Compile Include="Controls\ClipboardMonitor.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataGridViewCustomCell.cs" />
-    <Compile Include="ClipboardDataManagement.cs" />
+    <Compile Include="Core\ClipboardDataManagement.cs" />
     <Compile Include="DataGridViewRolloverCellColumn.cs" />
     <Compile Include="FileClipboardStorage.cs" />
-    <Compile Include="IClipboardStorage.cs" />
-    <Compile Include="KeyboardHook.cs" />
-    <Compile Include="KeyPressedEventArgs.cs" />
+    <Compile Include="Interfaces\IClipboardStorage.cs" />
+    <Compile Include="Utilities\KeyboardHook.cs" />
+    <Compile Include="Utilities\KeyPressedEventArgs.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -294,6 +298,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.4\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.4\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

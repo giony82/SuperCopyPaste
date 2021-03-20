@@ -1,26 +1,25 @@
 ﻿using System;
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using KGySoft.ComponentModel;
 using KGySoft.CoreLibraries;
-using Super_Copy_Paste;
+using SuperCopyPaste.Models;
 using TomsToolbox.Essentials;
 using CollectionExtensions = TomsToolbox.Essentials.CollectionExtensions;
 
-namespace SuperCopyPaste
+namespace SuperCopyPaste.Core
 {
     public class ClipboardDataManagement
     {
-        private const int ImageCopyPasteToleranceMs = 100;
         private readonly SortableBindingList<ClipboardItem> _clipboardItems;
         private readonly IClipboardStorage _clipboardStorage;
 
         private FilterCriteria _filterCriteria = new FilterCriteria();
 
         private DateTime? _lastTimeCopyPasted;
+        private readonly SortableBindingList<ClipboardItem> _filteredClipboardItems = new SortableBindingList<ClipboardItem>();
 
         public ClipboardDataManagement(IClipboardStorage clipboardStorage)
         {
@@ -28,13 +27,19 @@ namespace SuperCopyPaste
             _clipboardItems = new SortableBindingList<ClipboardItem>();
         }
 
-        public SortableBindingList<ClipboardItem> DataSource { get; } = new SortableBindingList<ClipboardItem>();
+        public SortableBindingList<ClipboardItem> DataSource => _filteredClipboardItems;
 
         public event EventHandler<int> CountChanged;
 
         private void Add(ClipboardItem item)
         {
-            if (string.IsNullOrWhiteSpace(item.Data.Text) && item.Data.Image == null) return;
+            if (string.IsNullOrWhiteSpace(item.Data.Text) && item.Data.Image == null)
+            {
+                return;
+            }
+
+            KeepListMaxAllowedLength();
+
             _clipboardItems.Add(item);
 
             Filter(_filterCriteria);
@@ -42,19 +47,54 @@ namespace SuperCopyPaste
             OnCountChanged(DataSource.Count);
         }
 
+        private void KeepListMaxAllowedLength()
+        {
+            if (_clipboardItems.Count > Constants.MaxClipboardRecords)
+            {
+                var oldestClipboard = _clipboardItems.OrderByDescending(x => x.Created).First();
+                _clipboardItems.Remove(oldestClipboard);
+            }
+        }
+
         public void Load()
         {
             try
             {
-                var clipboardItemsList = _clipboardStorage.Read<List<ClipboardItem>>();
-                CollectionExtensions.AddRange(_clipboardItems, clipboardItemsList);
-                CollectionExtensions.AddRange(DataSource, clipboardItemsList);
-                OnCountChanged(DataSource.Count);
+                var clipboardItemsList = _clipboardStorage.Read<List<ClipboardItem>>().OrderByDescending(x => x.Created)
+                    .ToList();
+
+                PopulateLists(clipboardItemsList);
             }
             catch (Exception err)
             {
                 Trace.WriteLine(err);
+
+                PopulateLists(GetErrorAsClipboardItem(err));
             }
+        }
+
+        private static List<ClipboardItem> GetErrorAsClipboardItem(Exception err)
+        {
+            var clipboardItemError = new ClipboardItem
+            {
+                Created = DateTime.Now,
+                Data = new ClipboardData
+                {
+                    Text = err.ToString()
+                }
+            };
+            var errorAsClipboardItems = new List<ClipboardItem>
+            {
+                clipboardItemError
+            };
+            return errorAsClipboardItems;
+        }
+
+        private void PopulateLists(List<ClipboardItem> clipboardItemsList)
+        {
+            CollectionExtensions.AddRange(_clipboardItems, clipboardItemsList);
+            CollectionExtensions.AddRange(DataSource, clipboardItemsList);
+            OnCountChanged(DataSource.Count);
         }
 
         public void Save()
@@ -117,7 +157,7 @@ namespace SuperCopyPaste
         {
             //When capturing images with CTRL SHIFT S, the event is triggered twice(same image).
             var isDuplicated = _lastTimeCopyPasted != null &&
-                               (DateTime.Now - _lastTimeCopyPasted.Value).TotalMilliseconds < ImageCopyPasteToleranceMs;
+                               (DateTime.Now - _lastTimeCopyPasted.Value).TotalMilliseconds < Constants.ImageCopyPasteToleranceMs;
 
             if (dataObject == null || isDuplicated) return;
 
@@ -130,7 +170,6 @@ namespace SuperCopyPaste
                 clipboardItem.Data = new ClipboardData
                 {
                     Image = dataObject.GetData(DataFormats.Bitmap),
-                    ClipboardType = ClipboardType.Image
                 };
             }
             else
@@ -138,8 +177,7 @@ namespace SuperCopyPaste
                 var data = dataObject.GetData(typeof(string));
                 clipboardItem.Data = new ClipboardData
                 {
-                    Text = data.ToString(),
-                    ClipboardType = ClipboardType.Text
+                    Text = data.ToString()
                 };
             }
 

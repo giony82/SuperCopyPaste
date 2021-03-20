@@ -59,5 +59,32 @@ namespace SuperCopyPaste.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to close the application?.
+        /// </summary>
+        internal static string Are_you_sure_you_want_to_close_the_application {
+            get {
+                return ResourceManager.GetString("Are_you_sure_you_want_to_close_the_application", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t save clipboard data: {0}.
+        /// </summary>
+        internal static string Cant_save_clipboard_data_0 {
+            get {
+                return ResourceManager.GetString("Cant_save_clipboard_data_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Super Copy Paste.
+        /// </summary>
+        internal static string Super_Copy_Paste {
+            get {
+                return ResourceManager.GetString("Super_Copy_Paste", resourceCulture);
+            }
+        }
     }
 }

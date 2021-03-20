@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Super_Copy_Paste;
+using SuperCopyPaste.Models;
 
 namespace SuperCopyPaste
 {
