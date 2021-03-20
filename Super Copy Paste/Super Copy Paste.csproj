@@ -250,7 +250,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Models\FilterCriteria.cs" />
-    <Compile Include="ModifierKeys.cs" />
+    <Compile Include="Keyboard\ModifierKeys.cs" />
     <Compile Include="Models\ClipboardItem.cs" />
     <Compile Include="Controls\ClipboardMonitor.cs">
       <SubType>Component</SubType>
@@ -260,8 +260,8 @@
     <Compile Include="DataGridViewRolloverCellColumn.cs" />
     <Compile Include="FileClipboardStorage.cs" />
     <Compile Include="Interfaces\IClipboardStorage.cs" />
-    <Compile Include="Utilities\KeyboardHook.cs" />
-    <Compile Include="Utilities\KeyPressedEventArgs.cs" />
+    <Compile Include="Keyboard\KeyboardHook.cs" />
+    <Compile Include="Keyboard\KeyPressedEventArgs.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
