@@ -198,6 +198,7 @@ namespace SuperCopyPaste
             WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
             dataGridView.Focus();
+            txtBox.Text = string.Empty;
             Activate();
         }
 
@@ -284,6 +285,10 @@ namespace SuperCopyPaste
             switch (e.Mode)
             {
                 case PowerModes.Resume:
+                    Controls.Remove(_clipboardMonitor);
+                    _clipboardMonitor.Dispose();
+                    _clipboardMonitor=new ClipboardMonitor();
+                    Controls.Add(_clipboardMonitor);
                     _clipboardMonitor.ClipboardChanged += ClipboardMonitorClipboardChanged;
                     break;
             }

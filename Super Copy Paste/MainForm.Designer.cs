@@ -137,7 +137,7 @@ namespace SuperCopyPaste
             // bindingSource
             // 
             this.bindingSource.AllowNew = true;
-            this.bindingSource.DataSource = typeof(ClipboardItem);
+            this.bindingSource.DataSource = typeof(SuperCopyPaste.Models.ClipboardItem);
             // 
             // notifyIcon
             // 
@@ -189,42 +189,42 @@ namespace SuperCopyPaste
             // clearAllToolStripMenuItem
             // 
             this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
-            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.clearAllToolStripMenuItem.Text = "Clear &all";
             this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
             // 
             // deleteItemsOlderThan1DayToolStripMenuItem
             // 
             this.deleteItemsOlderThan1DayToolStripMenuItem.Name = "deleteItemsOlderThan1DayToolStripMenuItem";
-            this.deleteItemsOlderThan1DayToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.deleteItemsOlderThan1DayToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.deleteItemsOlderThan1DayToolStripMenuItem.Text = "Delete items older than &1 day";
             this.deleteItemsOlderThan1DayToolStripMenuItem.Click += new System.EventHandler(this.deleteItemsOlderThan1DayToolStripMenuItem_Click);
             // 
             // deleteItemsOlderThan3DaysToolStripMenuItem
             // 
             this.deleteItemsOlderThan3DaysToolStripMenuItem.Name = "deleteItemsOlderThan3DaysToolStripMenuItem";
-            this.deleteItemsOlderThan3DaysToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.deleteItemsOlderThan3DaysToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.deleteItemsOlderThan3DaysToolStripMenuItem.Text = "Delete items older than &3 days";
             this.deleteItemsOlderThan3DaysToolStripMenuItem.Click += new System.EventHandler(this.deleteItemsOlderThan3DaysToolStripMenuItem_Click);
             // 
             // deleteItemsOlderThanOneWeekToolStripMenuItem
             // 
             this.deleteItemsOlderThanOneWeekToolStripMenuItem.Name = "deleteItemsOlderThanOneWeekToolStripMenuItem";
-            this.deleteItemsOlderThanOneWeekToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.deleteItemsOlderThanOneWeekToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.deleteItemsOlderThanOneWeekToolStripMenuItem.Text = "Delete items older than one &week";
             this.deleteItemsOlderThanOneWeekToolStripMenuItem.Click += new System.EventHandler(this.deleteItemsOlderThanOneWeekToolStripMenuItem_Click);
             // 
             // deleteItemsOlderThanOneMonthToolStripMenuItem
             // 
             this.deleteItemsOlderThanOneMonthToolStripMenuItem.Name = "deleteItemsOlderThanOneMonthToolStripMenuItem";
-            this.deleteItemsOlderThanOneMonthToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.deleteItemsOlderThanOneMonthToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.deleteItemsOlderThanOneMonthToolStripMenuItem.Text = "Delete items older than one &month";
             this.deleteItemsOlderThanOneMonthToolStripMenuItem.Click += new System.EventHandler(this.deleteItemsOlderThanOneMonthToolStripMenuItem_Click);
             // 
             // unpinAllToolStripMenuItem
             // 
             this.unpinAllToolStripMenuItem.Name = "unpinAllToolStripMenuItem";
-            this.unpinAllToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.unpinAllToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.unpinAllToolStripMenuItem.Text = "&Unpin all";
             this.unpinAllToolStripMenuItem.Click += new System.EventHandler(this.unpinAllToolStripMenuItem_Click);
             // 
@@ -232,7 +232,9 @@ namespace SuperCopyPaste
             // 
             this.showOnlyPinnedItemsToolStripMenuItem.CheckOnClick = true;
             this.showOnlyPinnedItemsToolStripMenuItem.Name = "showOnlyPinnedItemsToolStripMenuItem";
-            this.showOnlyPinnedItemsToolStripMenuItem.Size = new System.Drawing.Size(324, 26);
+            this.showOnlyPinnedItemsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.P)));
+            this.showOnlyPinnedItemsToolStripMenuItem.Size = new System.Drawing.Size(340, 26);
             this.showOnlyPinnedItemsToolStripMenuItem.Text = "Show only pinned items";
             this.showOnlyPinnedItemsToolStripMenuItem.Click += new System.EventHandler(this.showOnlyPinnedItemsToolStripMenuItem_Click);
             // 
