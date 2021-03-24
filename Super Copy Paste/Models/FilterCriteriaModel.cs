@@ -1,6 +1,6 @@
 ﻿namespace SuperCopyPaste.Models
 {
-    public class FilterCriteria
+    public class FilterCriteriaModel
     {
         public string Text { get; set; }
 

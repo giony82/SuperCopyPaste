@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using SuperCopyPaste.Constants;
 using SuperCopyPaste.Controls;
 using SuperCopyPaste.Core;
 using SuperCopyPaste.Keyboard;
@@ -24,10 +24,6 @@ namespace SuperCopyPaste
 
         private bool _suppressClipboardMonitoring;
 
-        private const int ImageHeight = 150;
-
-        private const int TextHeight = 35;
-
         public MainForm()
         {
             InitializeComponent();
@@ -41,21 +37,20 @@ namespace SuperCopyPaste
             dataGridView.DataSource = _clipboardDataManagement.DataSource;
 
             _keyboardHook.KeyPressed += hook_KeyPressed;
-            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
             _keyboardHook.RegisterHotKey(Keyboard.ModifierKeys.Control, Keys.Enter);
 
             dataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
-        private ClipboardItem CurrentClipboardItem
+        private ClipboardItemModel CurrentClipboardItem
         {
             get
             {
                 if (dataGridView.SelectedRows.Count == 1)
-                {
-                    return (ClipboardItem) dataGridView.SelectedRows[0].DataBoundItem;
-                }
+                    return (ClipboardItemModel) dataGridView.SelectedRows[0].DataBoundItem;
 
                 return null;
             }
@@ -89,14 +84,12 @@ namespace SuperCopyPaste
             const int WM_SYSKEYDOWN = 0x104;
 
             if (msg.Msg == WM_KEYDOWN || msg.Msg == WM_SYSKEYDOWN)
-            {
                 switch (keyData)
                 {
                     case Keys.Escape:
                         SendToTray();
                         return true;
                 }
-            }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -113,26 +106,23 @@ namespace SuperCopyPaste
 
         private void ClipboardMonitorClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
-            if (_suppressClipboardMonitoring)
-            {
-                return;
-            }
+            if (_suppressClipboardMonitoring) return;
 
-            IDataObject d = Clipboard.GetDataObject();
+            IDataObject dataObject = Clipboard.GetDataObject();
 
-            _clipboardDataManagement.AddClipboardData(d);
+            _clipboardDataManagement.AddClipboardData(dataObject);
 
             dataGridView.Sort(createdDataGridViewTextBoxColumn, ListSortDirection.Descending);
 
             BeginInvoke(new MethodInvoker(ResizeRows));
         }
 
-        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             Paste();
         }
 
-        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        private void dataGridView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && CurrentClipboardItem != null)
             {
@@ -145,7 +135,7 @@ namespace SuperCopyPaste
                 _clipboardDataManagement.Delete(CurrentClipboardItem);
                 e.SuppressKeyPress = true;
             }
-            else if (char.IsLetterOrDigit((char) e.KeyCode) || e.KeyCode == Keys.Back)
+            else if (char.IsLetterOrDigit((char) e.KeyCode) || e.KeyCode == Keys.Back || e.KeyCode==Keys.Space)
             {
                 txtBox.Focus();
                 SendKeys.Send(((char) e.KeyCode).ToString());
@@ -174,15 +164,18 @@ namespace SuperCopyPaste
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(Resources.Are_you_sure_you_want_to_close_the_application, Resources.Super_Copy_Paste, MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question) == DialogResult.Yes)
+            DialogResult dialogResult = MessageBox.Show(Resources.Are_you_sure_you_want_to_close_the_application,
+                Resources.Super_Copy_Paste, MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
             {
                 _clipboardDataManagement.Save();
                 Application.Exit();
             }
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
+        private void MainForm_Resize(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
             {
@@ -204,6 +197,8 @@ namespace SuperCopyPaste
 
         private void InitClipboardMonitor()
         {
+            Controls.Remove(_clipboardMonitor);
+            _clipboardMonitor?.Dispose();
             _clipboardMonitor = new ClipboardMonitor();
             Controls.Add(_clipboardMonitor);
             _clipboardMonitor.ClipboardChanged += ClipboardMonitorClipboardChanged;
@@ -218,23 +213,12 @@ namespace SuperCopyPaste
 
         private void Paste()
         {
-            if (CurrentClipboardItem == null)
-            {
-                return;
-            }
+            if (CurrentClipboardItem == null) return;
 
             _suppressClipboardMonitoring = true;
             try
             {
-                switch (CurrentClipboardItem.Data.ClipboardType)
-                {
-                    case ClipboardType.Text:
-                        Clipboard.SetText(CurrentClipboardItem.Data.Text);
-                        break;
-                    case ClipboardType.Image:
-                        Clipboard.SetImage((Image) CurrentClipboardItem.Data.Image);
-                        break;
-                }
+                CurrentClipboardItem.CopyToClipboard();
             }
             finally
             {
@@ -251,14 +235,10 @@ namespace SuperCopyPaste
         private void ResizeRows()
         {
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
-            {
-                if (dataGridViewRow.DataBoundItem is ClipboardItem c)
+                if (dataGridViewRow.DataBoundItem is ClipboardItemModel clipboardItem)
                 {
-                    var isImage = c.Data.ClipboardType == ClipboardType.Image;
-                    var height = isImage ? ImageHeight : TextHeight;
-                    dataGridViewRow.Height = height;
+                    dataGridViewRow.Height = clipboardItem.GetHeight();
                 }
-            }
         }
 
         private void SaveClipboardItems()
@@ -285,11 +265,7 @@ namespace SuperCopyPaste
             switch (e.Mode)
             {
                 case PowerModes.Resume:
-                    Controls.Remove(_clipboardMonitor);
-                    _clipboardMonitor.Dispose();
-                    _clipboardMonitor=new ClipboardMonitor();
-                    Controls.Add(_clipboardMonitor);
-                    _clipboardMonitor.ClipboardChanged += ClipboardMonitorClipboardChanged;
+                    InitClipboardMonitor();
                     break;
             }
         }
@@ -324,8 +300,9 @@ namespace SuperCopyPaste
 
         private void txtBox_TextChanged(object sender, EventArgs e)
         {
-            var filterCriteria = new FilterCriteria {
-                Text = txtBox.Text, 
+            var filterCriteria = new FilterCriteriaModel
+            {
+                Text = txtBox.Text,
                 Pinned = showOnlyPinnedItemsToolStripMenuItem.Checked
             };
 
@@ -356,7 +333,7 @@ namespace SuperCopyPaste
 
         private void showOnlyPinnedItemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var filterCriteria = new FilterCriteria
+            var filterCriteria = new FilterCriteriaModel
             {
                 Text = txtBox.Text,
                 Pinned = showOnlyPinnedItemsToolStripMenuItem.Checked

@@ -4,7 +4,7 @@ using SuperCopyPaste.Core;
 namespace SuperCopyPaste.Models
 {
     [Serializable]
-    public class ClipboardData
+    public class ClipboardDataModel
     {
         public string Text { get; set; }
 

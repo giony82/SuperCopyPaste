@@ -26,7 +26,7 @@ namespace SuperCopyPaste
                 value, formattedValue, errorText, cellStyle,
                 advancedBorderStyle, paintParts);
 
-            var cellValue = (ClipboardData) value;
+            var cellValue = (ClipboardDataModel) value;
 
             if (cellValue == null) return;
 

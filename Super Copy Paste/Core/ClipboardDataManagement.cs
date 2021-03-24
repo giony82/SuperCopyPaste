@@ -13,25 +13,25 @@ namespace SuperCopyPaste.Core
 {
     public class ClipboardDataManagement
     {
-        private readonly SortableBindingList<ClipboardItem> _clipboardItems;
+        private readonly SortableBindingList<ClipboardItemModel> _clipboardItems;
         private readonly IClipboardStorage _clipboardStorage;
 
-        private FilterCriteria _filterCriteria = new FilterCriteria();
+        private FilterCriteriaModel _filterCriteria = new FilterCriteriaModel();
 
         private DateTime? _lastTimeCopyPasted;
-        private readonly SortableBindingList<ClipboardItem> _filteredClipboardItems = new SortableBindingList<ClipboardItem>();
+        private readonly SortableBindingList<ClipboardItemModel> _filteredClipboardItems = new SortableBindingList<ClipboardItemModel>();
 
         public ClipboardDataManagement(IClipboardStorage clipboardStorage)
         {
             _clipboardStorage = clipboardStorage;
-            _clipboardItems = new SortableBindingList<ClipboardItem>();
+            _clipboardItems = new SortableBindingList<ClipboardItemModel>();
         }
 
-        public SortableBindingList<ClipboardItem> DataSource => _filteredClipboardItems;
+        public SortableBindingList<ClipboardItemModel> DataSource => _filteredClipboardItems;
 
         public event EventHandler<int> CountChanged;
 
-        private void Add(ClipboardItem item)
+        private void Add(ClipboardItemModel item)
         {
             if (string.IsNullOrWhiteSpace(item.Data.Text) && item.Data.Image == null)
             {
@@ -49,7 +49,7 @@ namespace SuperCopyPaste.Core
 
         private void KeepListMaxAllowedLength()
         {
-            if (_clipboardItems.Count > Constants.MaxClipboardRecords)
+            if (_clipboardItems.Count > ClipboardConstants.MaxClipboardRecords)
             {
                 var oldestClipboard = _clipboardItems.OrderByDescending(x => x.Created).First();
                 _clipboardItems.Remove(oldestClipboard);
@@ -60,7 +60,7 @@ namespace SuperCopyPaste.Core
         {
             try
             {
-                var clipboardItemsList = _clipboardStorage.Read<List<ClipboardItem>>().OrderByDescending(x => x.Created)
+                var clipboardItemsList = _clipboardStorage.Read<List<ClipboardItemModel>>().OrderByDescending(x => x.Created)
                     .ToList();
 
                 PopulateLists(clipboardItemsList);
@@ -73,24 +73,24 @@ namespace SuperCopyPaste.Core
             }
         }
 
-        private static List<ClipboardItem> GetErrorAsClipboardItem(Exception err)
+        private static List<ClipboardItemModel> GetErrorAsClipboardItem(Exception err)
         {
-            var clipboardItemError = new ClipboardItem
+            var clipboardItemError = new ClipboardItemModel
             {
                 Created = DateTime.Now,
-                Data = new ClipboardData
+                Data = new ClipboardDataModel
                 {
                     Text = err.ToString()
                 }
             };
-            var errorAsClipboardItems = new List<ClipboardItem>
+            var errorAsClipboardItems = new List<ClipboardItemModel>
             {
                 clipboardItemError
             };
             return errorAsClipboardItems;
         }
 
-        private void PopulateLists(List<ClipboardItem> clipboardItemsList)
+        private void PopulateLists(List<ClipboardItemModel> clipboardItemsList)
         {
             CollectionExtensions.AddRange(_clipboardItems, clipboardItemsList);
             CollectionExtensions.AddRange(DataSource, clipboardItemsList);
@@ -102,7 +102,7 @@ namespace SuperCopyPaste.Core
             _clipboardStorage.Write(_clipboardItems.ToList());
         }
 
-        public void Delete(ClipboardItem item)
+        public void Delete(ClipboardItemModel item)
         {
             if (item == null || item.Pinned)
             {
@@ -113,7 +113,7 @@ namespace SuperCopyPaste.Core
             OnCountChanged(_clipboardItems.Count);
         }
 
-        public void Filter(FilterCriteria criteria)
+        public void Filter(FilterCriteriaModel criteria)
         {
             _filterCriteria = criteria;
 
@@ -157,17 +157,17 @@ namespace SuperCopyPaste.Core
         {
             //When capturing images with CTRL SHIFT S, the event is triggered twice(same image).
             var isDuplicated = _lastTimeCopyPasted != null &&
-                               (DateTime.Now - _lastTimeCopyPasted.Value).TotalMilliseconds < Constants.ImageCopyPasteToleranceMs;
+                               (DateTime.Now - _lastTimeCopyPasted.Value).TotalMilliseconds < ClipboardConstants.ImageCopyPasteToleranceMs;
 
             if (dataObject == null || isDuplicated) return;
 
             _lastTimeCopyPasted = DateTime.Now;
 
-            var clipboardItem = new ClipboardItem();
+            var clipboardItem = new ClipboardItemModel();
 
             if (dataObject.GetDataPresent(DataFormats.Bitmap))
             {
-                clipboardItem.Data = new ClipboardData
+                clipboardItem.Data = new ClipboardDataModel
                 {
                     Image = dataObject.GetData(DataFormats.Bitmap),
                 };
@@ -175,7 +175,7 @@ namespace SuperCopyPaste.Core
             else
             {
                 var data = dataObject.GetData(typeof(string));
-                clipboardItem.Data = new ClipboardData
+                clipboardItem.Data = new ClipboardDataModel
                 {
                     Text = data.ToString()
                 };

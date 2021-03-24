@@ -1,6 +1,6 @@
 ﻿namespace SuperCopyPaste.Core
 {
-    public class Constants
+    public class ClipboardConstants
     {
         public const int ImageCopyPasteToleranceMs = 100;
 
