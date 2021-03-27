@@ -265,6 +265,7 @@ namespace SuperCopyPaste
             switch (e.Mode)
             {
                 case PowerModes.Resume:                    
+                    _clipboardDataManagement.Save();
                     Application.Restart();
                     Environment.Exit(0);
                     break;
