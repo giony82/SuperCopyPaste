@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media.Imaging;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using SuperCopyPaste.Constants;
 using SuperCopyPaste.Models;
 
@@ -15,7 +15,7 @@ namespace SuperCopyPaste.Core
                     Clipboard.SetText(clipboardItem.Data.Text);
                     break;
                 case ClipboardType.Image:
-                    Clipboard.SetImage((BitmapSource) clipboardItem.Data.Image);
+                    Clipboard.SetImage((Image)clipboardItem.Data.Image);
                     break;
             }
         }
