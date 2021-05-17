@@ -42,7 +42,6 @@ namespace SuperCopyPaste
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.txtBox = new SuperCopyPaste.Controls.CueTextBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.clipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,8 +52,10 @@ namespace SuperCopyPaste
             this.unpinAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlyPinnedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.totalRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1 = new SuperCopyPaste.Controls.PanelEx();
+            this.txtBox = new SuperCopyPaste.Controls.CueTextBox();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
@@ -138,7 +139,7 @@ namespace SuperCopyPaste
             // bindingSource
             // 
             this.bindingSource.AllowNew = true;
-            this.bindingSource.DataSource = typeof(ClipboardItemModel);
+            this.bindingSource.DataSource = typeof(SuperCopyPaste.Models.ClipboardItemModel);
             // 
             // notifyIcon
             // 
@@ -149,23 +150,13 @@ namespace SuperCopyPaste
             this.notifyIcon.Visible = true;
             this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
             // 
-            // txtBox
-            // 
-            this.txtBox.Cue = "Start typing to filter records";
-            this.txtBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.txtBox.Location = new System.Drawing.Point(3, 548);
-            this.txtBox.Name = "txtBox";
-            this.txtBox.Size = new System.Drawing.Size(979, 22);
-            this.txtBox.TabIndex = 1;
-            this.txtBox.TextChanged += new System.EventHandler(this.txtBox_TextChanged);
-            this.txtBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBox_KeyDown);
-            // 
             // menuStrip
             // 
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clipboardToolStripMenuItem,
             this.currentRecordsToolStripMenuItem,
+            this.totalRecordsToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(3, 3);
             this.menuStrip.Name = "menuStrip";
@@ -243,8 +234,14 @@ namespace SuperCopyPaste
             // currentRecordsToolStripMenuItem
             // 
             this.currentRecordsToolStripMenuItem.Name = "currentRecordsToolStripMenuItem";
-            this.currentRecordsToolStripMenuItem.Size = new System.Drawing.Size(139, 24);
-            this.currentRecordsToolStripMenuItem.Text = "Current records: 0";
+            this.currentRecordsToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.currentRecordsToolStripMenuItem.Text = "Displayed records: 0";
+            // 
+            // totalRecordsToolStripMenuItem
+            // 
+            this.totalRecordsToolStripMenuItem.Name = "totalRecordsToolStripMenuItem";
+            this.totalRecordsToolStripMenuItem.Size = new System.Drawing.Size(113, 24);
+            this.totalRecordsToolStripMenuItem.Text = "Total Records";
             // 
             // exitToolStripMenuItem
             // 
@@ -266,6 +263,18 @@ namespace SuperCopyPaste
             this.panel1.Padding = new System.Windows.Forms.Padding(3);
             this.panel1.Size = new System.Drawing.Size(985, 573);
             this.panel1.TabIndex = 3;
+            this.panel1.Useoptimiziaton = true;
+            // 
+            // txtBox
+            // 
+            this.txtBox.Cue = "Start typing to filter records";
+            this.txtBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txtBox.Location = new System.Drawing.Point(3, 548);
+            this.txtBox.Name = "txtBox";
+            this.txtBox.Size = new System.Drawing.Size(979, 22);
+            this.txtBox.TabIndex = 1;
+            this.txtBox.TextChanged += new System.EventHandler(this.txtBox_TextChanged);
+            this.txtBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBox_KeyDown);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -281,7 +290,6 @@ namespace SuperCopyPaste
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 573);
             this.Controls.Add(this.panel1);
-            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.ShowIcon = false;
@@ -317,13 +325,14 @@ namespace SuperCopyPaste
         private DataGridViewRolloverCellColumn Data;
         private System.Windows.Forms.DataGridViewTextBoxColumn createdDataGridViewTextBoxColumn;
         private System.Windows.Forms.ToolStripMenuItem currentRecordsToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
+        private PanelEx panel1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem pinToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unpinAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlyPinnedItemsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem totalRecordsToolStripMenuItem;
     }
 }
 

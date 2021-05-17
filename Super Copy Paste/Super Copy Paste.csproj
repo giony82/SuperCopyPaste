@@ -243,6 +243,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants\UIConstants.cs" />
+    <Compile Include="Controls\PanelEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core\ClipboardChangedEventArgs.cs" />
     <Compile Include="Constants\ClipboardConstants.cs" />
     <Compile Include="Core\ClipboardItemExtensions.cs" />

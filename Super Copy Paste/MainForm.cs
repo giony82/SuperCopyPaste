@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using Microsoft.Win32;
-using SuperCopyPaste.Constants;
 using SuperCopyPaste.Controls;
 using SuperCopyPaste.Core;
 using SuperCopyPaste.Keyboard;
@@ -43,6 +44,13 @@ namespace SuperCopyPaste
             dataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+
+            _searchTimer= new DispatcherTimer(TimeSpan.FromMilliseconds(300),DispatcherPriority.Send,
+                delegate(object sender, EventArgs args)
+                {
+                    _searchTimer.Stop();
+                    Search();
+                }, Dispatcher.CurrentDispatcher);
         }
 
         private ClipboardItemModel CurrentClipboardItem
@@ -50,7 +58,9 @@ namespace SuperCopyPaste
             get
             {
                 if (dataGridView.SelectedRows.Count == 1)
+                {
                     return (ClipboardItemModel) dataGridView.SelectedRows[0].DataBoundItem;
+                }
 
                 return null;
             }
@@ -99,9 +109,10 @@ namespace SuperCopyPaste
             _clipboardDataManagement.Clear();
         }
 
-        private void ClipboardDataManagementCountChanged(object sender, int count)
+        private void ClipboardDataManagementCountChanged(object sender, (int displayed, int total) e)
         {
-            currentRecordsToolStripMenuItem.Text = $"Current records:{count}";
+            currentRecordsToolStripMenuItem.Text = $@"Displayed records:{e.displayed}";
+            totalRecordsToolStripMenuItem.Text = $@"Total records:{e.total}";
         }
 
         private void ClipboardMonitorClipboardChanged(object sender, ClipboardChangedEventArgs e)
@@ -235,10 +246,12 @@ namespace SuperCopyPaste
         private void ResizeRows()
         {
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
+            {
                 if (dataGridViewRow.DataBoundItem is ClipboardItemModel clipboardItem)
                 {
                     dataGridViewRow.Height = clipboardItem.GetHeight();
                 }
+            }
         }
 
         private void SaveClipboardItems()
@@ -300,7 +313,9 @@ namespace SuperCopyPaste
             }
         }
 
-        private void txtBox_TextChanged(object sender, EventArgs e)
+        private DispatcherTimer _searchTimer;
+
+        private void Search()
         {
             var filterCriteria = new FilterCriteriaModel
             {
@@ -311,6 +326,12 @@ namespace SuperCopyPaste
             _clipboardDataManagement.Filter(filterCriteria);
 
             ResizeRows();
+        }
+
+        private void txtBox_TextChanged(object sender, EventArgs e)
+        {
+            _searchTimer.Stop();
+            _searchTimer.Start();
         }
 
         private void pinToolStripMenuItem_Click(object sender, EventArgs e)
