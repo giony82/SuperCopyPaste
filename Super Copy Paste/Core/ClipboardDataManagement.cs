@@ -18,6 +18,8 @@ namespace SuperCopyPaste.Core
         private readonly SortableBindingList<ClipboardItemModel> _clipboardItems;
         private readonly IClipboardStorage _clipboardStorage;
 
+        public event EventHandler<string> Error;
+
         private FilterCriteriaModel _filterCriteria = new FilterCriteriaModel();
 
         private DateTime? _lastTimeCopyPasted;
@@ -50,7 +52,7 @@ namespace SuperCopyPaste.Core
         {
             if (_clipboardItems.Count > ClipboardConstants.MaxClipboardRecords)
             {
-                var oldestClipboard = _clipboardItems.OrderByDescending(x => x.Created).First();
+                ClipboardItemModel oldestClipboard = _clipboardItems.OrderByDescending(x => x.Created).First();
                 _clipboardItems.Remove(oldestClipboard);
             }
         }
@@ -59,34 +61,16 @@ namespace SuperCopyPaste.Core
         {
             try
             {
-                var clipboardItemsList = _clipboardStorage.Read<List<ClipboardItemModel>>().OrderByDescending(x => x.Created)
-                    .ToList();
+                List<ClipboardItemModel> clipboardItemsList = _clipboardStorage.Read<List<ClipboardItemModel>>().OrderByDescending(x => x.Created)
+                                                                               .ToList();
 
                 PopulateLists(clipboardItemsList);
             }
             catch (Exception err)
             {
                 Trace.WriteLine(err);
-
-                PopulateLists(GetErrorAsClipboardItem(err));
+                OnError(err.Message);
             }
-        }
-
-        private static List<ClipboardItemModel> GetErrorAsClipboardItem(Exception err)
-        {
-            var clipboardItemError = new ClipboardItemModel
-            {
-                Created = DateTime.Now,
-                Data = new ClipboardDataModel
-                {
-                    Text = err.ToString()
-                }
-            };
-            var errorAsClipboardItems = new List<ClipboardItemModel>
-            {
-                clipboardItemError
-            };
-            return errorAsClipboardItems;
         }
 
         private void PopulateLists(IReadOnlyCollection<ClipboardItemModel> clipboardItemsList)
@@ -190,6 +174,11 @@ namespace SuperCopyPaste.Core
         public void UnpinAll()
         {
             DataSource.Where(x => x.Pinned).ToList().ForEach(x => x.Pinned = false);
+        }
+
+        protected virtual void OnError(string e)
+        {
+            Error?.Invoke(this, e);
         }
     }
 }

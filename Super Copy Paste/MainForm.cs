@@ -35,6 +35,7 @@ namespace SuperCopyPaste
 
             _clipboardDataManagement = new ClipboardDataManagement(new FileClipboardStorage());
             _clipboardDataManagement.CountChanged += ClipboardDataManagementCountChanged;
+            _clipboardDataManagement.Error += _clipboardDataManagement_Error;
             _clipboardDataManagement.Load();
 
             InitClipboardMonitor();
@@ -57,6 +58,11 @@ namespace SuperCopyPaste
                     _searchTimer.Stop();
                     Search();
                 }, Dispatcher.CurrentDispatcher);
+        }
+
+        private void _clipboardDataManagement_Error(object sender, string e)
+        {
+            MessageBox.Show(e, "Ouuupss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private ClipboardItemModel CurrentClipboardItem
