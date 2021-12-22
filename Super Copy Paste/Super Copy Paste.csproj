@@ -245,6 +245,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\Config.cs" />
     <Compile Include="Constants\UIConstants.cs" />
     <Compile Include="Controls\PanelEx.cs">
       <SubType>Component</SubType>

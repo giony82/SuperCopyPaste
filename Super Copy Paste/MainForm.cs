@@ -1,10 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using System.Text;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Microsoft.Win32;
+
+using SuperCopyPaste.Constants;
 using SuperCopyPaste.Controls;
 using SuperCopyPaste.Core;
 using SuperCopyPaste.Keyboard;
@@ -39,14 +43,16 @@ namespace SuperCopyPaste
 
             _keyboardHook.KeyPressed += hook_KeyPressed;
 
-            _keyboardHook.RegisterHotKey(Keyboard.ModifierKeys.Control, Keys.Enter);
+            ModifierKeys modifierKeys = Config.ActivateModifierKey;
+            Keys enter = Config.ActivateKey;
+            _keyboardHook.RegisterHotKey(modifierKeys, enter);
 
             dataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
             _searchTimer= new DispatcherTimer(TimeSpan.FromMilliseconds(300),DispatcherPriority.Send,
-                delegate(object sender, EventArgs args)
+                delegate
                 {
                     _searchTimer.Stop();
                     Search();
@@ -70,6 +76,9 @@ namespace SuperCopyPaste
         // (the window  with which the user is currently working).
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -241,6 +250,17 @@ namespace SuperCopyPaste
             SetForegroundWindow(_currentFocusedWindow);
 
             SendKeys.Send("^v");
+
+            const int count = 256;
+            var buffer = new StringBuilder(count);
+
+            MainForm.GetWindowText(_currentFocusedWindow, buffer, count);
+            var currentFocusedWindowTitle = buffer.ToString();
+
+            if (currentFocusedWindowTitle.Contains(Config.DoublePasteApp))
+            {
+                SendKeys.Send("^v");
+            }
         }
 
         private void ResizeRows()
