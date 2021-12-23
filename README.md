@@ -12,7 +12,7 @@ In some organizations is not possible to install applications like Ditto Clipboa
 - Show only pinned items.
 
 # Shortcuts
-- CTR - ENTER -> activates the application 
+- ALT - F1 -> activates the application (it can be changed in the Constants.cs file)
 - ALT - X -> closes the application
 - DEL -> Deletes the current selected row
 
