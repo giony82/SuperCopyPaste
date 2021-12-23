@@ -84,9 +84,6 @@ namespace SuperCopyPaste
         private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
-        [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
@@ -255,18 +252,7 @@ namespace SuperCopyPaste
 
             SetForegroundWindow(_currentFocusedWindow);
 
-            SendKeys.Send("^v");
-
-            const int count = 256;
-            var buffer = new StringBuilder(count);
-
-            MainForm.GetWindowText(_currentFocusedWindow, buffer, count);
-            var currentFocusedWindowTitle = buffer.ToString();
-
-            if (currentFocusedWindowTitle.Contains(Config.DoublePasteApp))
-            {
-                SendKeys.Send("^v");
-            }
+            SendKeys.Send("^{v}");
         }
 
         private void ResizeRows()
