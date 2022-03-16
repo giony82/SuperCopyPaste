@@ -1,6 +1,12 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿// ------------------------------------------------------------------------------
+//     <copyright file="FileClipboardStorage.cs" company="BlackLine">
+//         Copyright (C) BlackLine. All rights reserved.
+//     </copyright>
+// ------------------------------------------------------------------------------
+
+using System.IO;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace SuperCopyPaste
 {
@@ -15,10 +21,17 @@ namespace SuperCopyPaste
         /// <returns>Returns a new instance of the object read from the binary file.</returns>
         public T Read<T>()
         {
-            using (Stream stream = File.Open(StorageFile, FileMode.Open))
+            var serializer = new JsonSerializer();
+
+            using (TextReader stream = new StreamReader(StorageFile))
             {
-                var binaryFormatter = new BinaryFormatter();
-                return (T) binaryFormatter.Deserialize(stream);
+                using (JsonReader reader = new JsonTextReader(stream))
+                {
+                    // read the json from a stream
+                    // json size doesn't matter because only a small piece is read at a time from the HTTP request
+                    var result = serializer.Deserialize<T>(reader);
+                    return result;
+                }
             }
         }
 
@@ -34,10 +47,15 @@ namespace SuperCopyPaste
         /// <param name="objectToWrite">The object instance to write to the binary file.</param>
         public void Write<T>(T objectToWrite)
         {
-            using (Stream stream = File.Open(StorageFile, FileMode.Create))
+            var serializer = new JsonSerializer();
+            using (TextWriter stream = new StreamWriter(StorageFile))
             {
-                var binaryFormatter = new BinaryFormatter();
-                binaryFormatter.Serialize(stream, objectToWrite);
+                using (var reader = new JsonTextWriter(stream))
+                {
+                    // read the json from a stream
+                    // json size doesn't matter because only a small piece is read at a time from the HTTP request
+                    serializer.Serialize(reader, objectToWrite);
+                }
             }
         }
     }
