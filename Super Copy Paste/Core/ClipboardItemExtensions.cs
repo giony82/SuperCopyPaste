@@ -22,8 +22,8 @@ namespace SuperCopyPaste.Core
 
         public static int GetHeight(this ClipboardItemModel clipboardItem)
         {
-            var isImage = clipboardItem.Data.ClipboardType == ClipboardType.Image;
-            var height = isImage ? UIConstants.ImageRowHeight : UIConstants.TextRowHeight;
+            bool isImage = clipboardItem.Data.ClipboardType == ClipboardType.Image;
+            int height = isImage ? UIConstants.ImageRowHeight : UIConstants.TextRowHeight;
             return height;
         }
     }

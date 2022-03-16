@@ -12,16 +12,13 @@ namespace SuperCopyPaste.Keyboard
         public KeyboardHook()
         {
             // register the event of the inner native window.
-            _window.KeyPressed += delegate(object sender, KeyPressedEventArgs args)
-            {
-                KeyPressed?.Invoke(this, args);
-            };
+            _window.KeyPressed += delegate(object sender, KeyPressedEventArgs args) { KeyPressed?.Invoke(this, args); };
         }
 
         public void Dispose()
         {
             // unregister all the registered hot keys.
-            for (var i = _currentId; i > 0; i--) UnregisterHotKey(_window.Handle, i);
+            for (int i = _currentId; i > 0; i--) UnregisterHotKey(_window.Handle, i);
 
             // dispose the inner native window.
             _window.Dispose();
@@ -39,7 +36,7 @@ namespace SuperCopyPaste.Keyboard
             _currentId = _currentId + 1;
 
             // register the hot key.
-            if (!RegisterHotKey(_window.Handle, _currentId, (uint) modifier, (uint) key))
+            if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
                 throw new InvalidOperationException("Couldn’t register the hot key.");
         }
 
@@ -79,8 +76,8 @@ namespace SuperCopyPaste.Keyboard
                 if (m.Msg == WM_HOTKEY)
                 {
                     // get the keys.
-                    var key = (Keys) (((int) m.LParam >> 16) & 0xFFFF);
-                    var modifier = (ModifierKeys) ((int) m.LParam & 0xFFFF);
+                    var key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
+                    var modifier = (ModifierKeys)((int)m.LParam & 0xFFFF);
 
                     // invoke the event to notify the parent.
                     KeyPressed?.Invoke(this, new KeyPressedEventArgs(modifier, key));

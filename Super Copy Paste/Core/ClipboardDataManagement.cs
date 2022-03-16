@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using KGySoft.ComponentModel;
 using KGySoft.CoreLibraries;
 using SuperCopyPaste.Constants;
+using SuperCopyPaste.Interfaces;
 using SuperCopyPaste.Models;
 using TomsToolbox.Essentials;
 using CollectionExtensions = TomsToolbox.Essentials.CollectionExtensions;
@@ -30,16 +31,14 @@ namespace SuperCopyPaste.Core
             _clipboardItems = new SortableBindingList<ClipboardItemModel>();
         }
 
-        public SortableBindingList<ClipboardItemModel> DataSource { get; } = new SortableBindingList<ClipboardItemModel>();
+        public SortableBindingList<ClipboardItemModel> DataSource { get; } =
+            new SortableBindingList<ClipboardItemModel>();
 
-        public event EventHandler<(int displyed,int total)> CountChanged;
+        public event EventHandler<(int displyed, int total)> CountChanged;
 
         private void Add(ClipboardItemModel item)
         {
-            if (string.IsNullOrWhiteSpace(item.Data.Text) && item.Data.Image == null)
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(item.Data.Text) && item.Data.Image == null) return;
 
             KeepListMaxAllowedLength();
 
@@ -61,8 +60,14 @@ namespace SuperCopyPaste.Core
         {
             try
             {
-                List<ClipboardItemModel> clipboardItemsList = _clipboardStorage.Read<List<ClipboardItemModel>>().OrderByDescending(x => x.Created)
-                                                                               .ToList();
+                var clipboardItemsList = _clipboardStorage.Read<List<ClipboardItemModel>>()
+                    .OrderByDescending(x => x.Created)
+                    .ToList();
+
+                if (!clipboardItemsList.Any())
+                {
+                    AddDefaultItem(clipboardItemsList);
+                }
 
                 PopulateLists(clipboardItemsList);
             }
@@ -73,11 +78,25 @@ namespace SuperCopyPaste.Core
             }
         }
 
+        private static void AddDefaultItem(List<ClipboardItemModel> clipboardItemsList)
+        {
+            clipboardItemsList.Add(new ClipboardItemModel
+            {
+                Created = DateTime.Now,
+                Id = Guid.NewGuid(),
+                Data = new ClipboardDataModel
+                {
+                    Text =
+                        "No clipboard items are available. This is an example of a text shown here when you copy text into clipboard. To send this text to the first foreground application, just press ENTER, or double click it with the mouse."
+                }
+            });
+        }
+
         private void PopulateLists(IReadOnlyCollection<ClipboardItemModel> clipboardItemsList)
         {
             CollectionExtensions.AddRange(_clipboardItems, clipboardItemsList);
             CollectionExtensions.AddRange(DataSource, clipboardItemsList.Take(ClipboardConstants.MaxResultsCount));
-            OnCountChanged(DataSource.Count,_clipboardItems.Count);
+            OnCountChanged(DataSource.Count, _clipboardItems.Count);
         }
 
         public void Save()
@@ -87,20 +106,17 @@ namespace SuperCopyPaste.Core
 
         public void Delete(ClipboardItemModel item)
         {
-            if (item == null || item.Pinned)
-            {
-                return;
-            }
+            if (item == null || item.Pinned) return;
             _clipboardItems.Remove(item);
             DataSource.Remove(item);
-            OnCountChanged(_clipboardItems.Count,_clipboardItems.Count);
+            OnCountChanged(_clipboardItems.Count, _clipboardItems.Count);
         }
 
         public void Filter(FilterCriteriaModel criteria)
         {
             _filterCriteria = criteria;
 
-            var hasText = !string.IsNullOrWhiteSpace(_filterCriteria.Text);
+            bool hasText = !string.IsNullOrWhiteSpace(_filterCriteria.Text);
             var items = (from clipboardItem in _clipboardItems
                     let isTextMatched = !hasText || clipboardItem.Data.ClipboardType == ClipboardType.Text &&
                         clipboardItem.Data.Text.Contains(_filterCriteria.Text,
@@ -121,7 +137,7 @@ namespace SuperCopyPaste.Core
         {
             _clipboardItems.Clear();
             DataSource.Clear();
-            OnCountChanged(DataSource.Count,_clipboardItems.Count);
+            OnCountChanged(DataSource.Count, _clipboardItems.Count);
             Save();
         }
 
@@ -140,13 +156,11 @@ namespace SuperCopyPaste.Core
         public void AddClipboardData(IDataObject dataObject)
         {
             //When capturing images with CTRL SHIFT S, the event is triggered twice(same image).
-            var isDuplicated = _lastTimeCopyPasted != null &&
-                               (DateTime.Now - _lastTimeCopyPasted.Value).TotalMilliseconds < ClipboardConstants.ImageCopyPasteToleranceMs;
+            bool isDuplicated = _lastTimeCopyPasted != null &&
+                                (DateTime.Now - _lastTimeCopyPasted.Value).TotalMilliseconds <
+                                ClipboardConstants.ImageCopyPasteToleranceMs;
 
-            if (dataObject == null || isDuplicated)
-            {
-                return;
-            }
+            if (dataObject == null || isDuplicated) return;
 
             _lastTimeCopyPasted = DateTime.Now;
 
@@ -156,7 +170,7 @@ namespace SuperCopyPaste.Core
             {
                 clipboardItem.Data = new ClipboardDataModel
                 {
-                    Image = dataObject.GetData(DataFormats.Bitmap),
+                    Image = dataObject.GetData(DataFormats.Bitmap)
                 };
             }
             else

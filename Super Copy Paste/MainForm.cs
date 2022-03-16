@@ -1,13 +1,10 @@
 ﻿using System;
+
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Microsoft.Win32;
-
 using SuperCopyPaste.Constants;
 using SuperCopyPaste.Controls;
 using SuperCopyPaste.Core;
@@ -27,13 +24,15 @@ namespace SuperCopyPaste
 
         private IntPtr _currentFocusedWindow;
 
+        private readonly DispatcherTimer _searchTimer;
+
         private bool _suppressClipboardMonitoring;
 
         public MainForm()
         {
             InitializeComponent();
 
-            _clipboardDataManagement = new ClipboardDataManagement(new FileClipboardStorage());
+            _clipboardDataManagement = new ClipboardDataManagement(new JSONFileClipboardStorage());
             _clipboardDataManagement.CountChanged += ClipboardDataManagementCountChanged;
             _clipboardDataManagement.Error += _clipboardDataManagement_Error;
             _clipboardDataManagement.Load();
@@ -52,7 +51,7 @@ namespace SuperCopyPaste
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
-            _searchTimer= new DispatcherTimer(TimeSpan.FromMilliseconds(300),DispatcherPriority.Send,
+            _searchTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(300), DispatcherPriority.Send,
                 delegate
                 {
                     _searchTimer.Stop();
@@ -60,22 +59,20 @@ namespace SuperCopyPaste
                 }, Dispatcher.CurrentDispatcher);
         }
 
-        private void _clipboardDataManagement_Error(object sender, string e)
-        {
-            MessageBox.Show(e, "Ouuupss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
         private ClipboardItemModel CurrentClipboardItem
         {
             get
             {
                 if (dataGridView.SelectedRows.Count == 1)
-                {
-                    return (ClipboardItemModel) dataGridView.SelectedRows[0].DataBoundItem;
-                }
+                    return (ClipboardItemModel)dataGridView.SelectedRows[0].DataBoundItem;
 
                 return null;
             }
+        }
+
+        private void _clipboardDataManagement_Error(object sender, string e)
+        {
+            MessageBox.Show(e, "Ouuupss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         // The GetForegroundWindow function returns a handle to the foreground window
@@ -158,10 +155,10 @@ namespace SuperCopyPaste
                 _clipboardDataManagement.Delete(CurrentClipboardItem);
                 e.SuppressKeyPress = true;
             }
-            else if (char.IsLetterOrDigit((char) e.KeyCode) || e.KeyCode == Keys.Back || e.KeyCode==Keys.Space)
+            else if (char.IsLetterOrDigit((char)e.KeyCode) || e.KeyCode == Keys.Back || e.KeyCode == Keys.Space)
             {
                 txtBox.Focus();
-                SendKeys.Send(((char) e.KeyCode).ToString());
+                SendKeys.Send(((char)e.KeyCode).ToString());
             }
         }
 
@@ -258,12 +255,8 @@ namespace SuperCopyPaste
         private void ResizeRows()
         {
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
-            {
                 if (dataGridViewRow.DataBoundItem is ClipboardItemModel clipboardItem)
-                {
                     dataGridViewRow.Height = clipboardItem.GetHeight();
-                }
-            }
         }
 
         private void SaveClipboardItems()
@@ -289,7 +282,7 @@ namespace SuperCopyPaste
         {
             switch (e.Mode)
             {
-                case PowerModes.Resume:                    
+                case PowerModes.Resume:
                     _clipboardDataManagement.Save();
                     Application.Restart();
                     Environment.Exit(0);
@@ -324,8 +317,6 @@ namespace SuperCopyPaste
                 e.Handled = true;
             }
         }
-
-        private DispatcherTimer _searchTimer;
 
         private void Search()
         {

@@ -1,11 +1,4 @@
-﻿// ------------------------------------------------------------------------------
-//     <copyright file="Config.cs" company="BlackLine">
-//         Copyright (C) BlackLine. All rights reserved.
-//     </copyright>
-// ------------------------------------------------------------------------------
-
-using System.Windows.Forms;
-
+﻿using System.Windows.Forms;
 using SuperCopyPaste.Keyboard;
 
 namespace SuperCopyPaste.Constants
@@ -21,7 +14,7 @@ namespace SuperCopyPaste.Constants
         // - End activation keys.
 
         /// <summary>
-        /// The app for which requires two ctrl v. 
+        ///     Some app like Visual Studio requires two ctrl-v. You can configure here the name of the app.
         /// </summary>
         public static string DoublePasteApp = "Microsoft Visual Studio";
     }

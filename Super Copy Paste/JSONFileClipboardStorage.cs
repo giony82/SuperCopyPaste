@@ -1,26 +1,25 @@
-﻿// ------------------------------------------------------------------------------
-//     <copyright file="FileClipboardStorage.cs" company="BlackLine">
-//         Copyright (C) BlackLine. All rights reserved.
-//     </copyright>
-// ------------------------------------------------------------------------------
-
-using System.IO;
+﻿using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using SuperCopyPaste.Interfaces;
 
 namespace SuperCopyPaste
 {
-    public class FileClipboardStorage : IClipboardStorage
+    public class JSONFileClipboardStorage : IClipboardStorage
     {
         private const string FileStorageName = "storage.bin";
 
         private static string StorageFile => Path.Combine(Application.StartupPath, FileStorageName);
 
         /// <summary>Reads an object instance from a binary file.</summary>
-        /// <typeparam name="T">The type of object to read from the binary file.</typeparam>
-        /// <returns>Returns a new instance of the object read from the binary file.</returns>
-        public T Read<T>()
+        /// <typeparam name="T">The type of object to read from the JSON file.</typeparam>
+        /// <returns>Returns a new instance of the object read from the JSON file.</returns>
+        public T Read<T>() where T : new()
         {
+            if (!File.Exists(StorageFile))
+            {
+                return new T();
+            }
             var serializer = new JsonSerializer();
 
             using (TextReader stream = new StreamReader(StorageFile))
@@ -36,15 +35,10 @@ namespace SuperCopyPaste
         }
 
         /// <summary>
-        ///     Writes the given object instance to a binary file.
-        ///     <para>Object type (and all child types) must be decorated with the [Serializable] attribute.</para>
-        ///     <para>
-        ///         To prevent a variable from being serialized, decorate it with the [NonSerialized] attribute; cannot be
-        ///         applied to properties.
-        ///     </para>
+        ///     Writes the given object instance to a JSON file.
         /// </summary>
-        /// <typeparam name="T">The type of object being written to the binary file.</typeparam>
-        /// <param name="objectToWrite">The object instance to write to the binary file.</param>
+        /// <typeparam name="T">The type of object being written to the JSON file.</typeparam>
+        /// <param name="objectToWrite">The object instance to write to the JSON file.</param>
         public void Write<T>(T objectToWrite)
         {
             var serializer = new JsonSerializer();

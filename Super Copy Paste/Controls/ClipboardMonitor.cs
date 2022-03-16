@@ -16,7 +16,7 @@ namespace SuperCopyPaste.Controls
         {
             Visible = false;
 
-            _nextClipboardViewer = (IntPtr) SetClipboardViewer((int) Handle);
+            _nextClipboardViewer = (IntPtr)SetClipboardViewer((int)Handle);
         }
 
         /// <summary>Clipboard contents changed.</summary>

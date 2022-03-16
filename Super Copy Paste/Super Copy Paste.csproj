@@ -270,7 +270,7 @@
     <Compile Include="DataGridViewCustomCell.cs" />
     <Compile Include="Core\ClipboardDataManagement.cs" />
     <Compile Include="DataGridViewRolloverCellColumn.cs" />
-    <Compile Include="FileClipboardStorage.cs" />
+    <Compile Include="JSONFileClipboardStorage.cs" />
     <Compile Include="Interfaces\IClipboardStorage.cs" />
     <Compile Include="Keyboard\KeyboardHook.cs" />
     <Compile Include="Keyboard\KeyPressedEventArgs.cs" />

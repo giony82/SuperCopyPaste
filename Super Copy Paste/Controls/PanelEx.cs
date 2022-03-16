@@ -16,12 +16,10 @@ namespace SuperCopyPaste.Controls
 
         protected override CreateParams CreateParams
         {
-            get {
-                var cp = base.CreateParams;
-                if (Useoptimiziaton)
-                {
-                    cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
-                }
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                if (Useoptimiziaton) cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
 
                 return cp;
             }

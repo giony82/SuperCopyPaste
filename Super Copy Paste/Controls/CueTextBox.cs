@@ -31,10 +31,7 @@ namespace SuperCopyPaste.Controls
 
         private void UpdateCue()
         {
-            if (IsHandleCreated && _cue != null)
-            {
-                SendMessage(Handle, 0x1501, (IntPtr) 1, _cue);
-            }
+            if (IsHandleCreated && _cue != null) SendMessage(Handle, 0x1501, (IntPtr)1, _cue);
         }
     }
 }
