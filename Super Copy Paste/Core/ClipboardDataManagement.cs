@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using KGySoft.ComponentModel;
 using KGySoft.CoreLibraries;
@@ -78,7 +78,7 @@ namespace SuperCopyPaste.Core
             }
         }
 
-        private static void AddDefaultItem(List<ClipboardItemModel> clipboardItemsList)
+        private static void AddDefaultItem(ICollection<ClipboardItemModel> clipboardItemsList)
         {
             clipboardItemsList.Add(new ClipboardItemModel
             {
@@ -170,7 +170,7 @@ namespace SuperCopyPaste.Core
             {
                 clipboardItem.Data = new ClipboardDataModel
                 {
-                    Image = dataObject.GetData(DataFormats.Bitmap)
+                    Image = (Bitmap)dataObject.GetData(DataFormats.Bitmap)
                 };
             }
             else

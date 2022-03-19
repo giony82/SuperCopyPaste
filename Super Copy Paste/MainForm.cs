@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Microsoft.Win32;
@@ -11,6 +12,7 @@ using SuperCopyPaste.Core;
 using SuperCopyPaste.Keyboard;
 using SuperCopyPaste.Models;
 using SuperCopyPaste.Properties;
+using SuperCopyPaste.Storage;
 
 namespace SuperCopyPaste
 {
@@ -35,11 +37,9 @@ namespace SuperCopyPaste
             _clipboardDataManagement = new ClipboardDataManagement(new JSONFileClipboardStorage());
             _clipboardDataManagement.CountChanged += ClipboardDataManagementCountChanged;
             _clipboardDataManagement.Error += _clipboardDataManagement_Error;
-            _clipboardDataManagement.Load();
+            
 
             InitClipboardMonitor();
-
-            dataGridView.DataSource = _clipboardDataManagement.DataSource;
 
             _keyboardHook.KeyPressed += hook_KeyPressed;
 
@@ -93,8 +93,17 @@ namespace SuperCopyPaste
 
         protected override void OnLoad(EventArgs e)
         {
+            _clipboardDataManagement.Load();
+            
             ResizeRows();
+
             base.OnLoad(e);
+        }
+
+        protected override void OnCreateControl()
+        {
+            dataGridView.DataSource = _clipboardDataManagement.DataSource;
+            base.OnCreateControl();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -255,8 +264,12 @@ namespace SuperCopyPaste
         private void ResizeRows()
         {
             foreach (DataGridViewRow dataGridViewRow in dataGridView.Rows)
+            {
                 if (dataGridViewRow.DataBoundItem is ClipboardItemModel clipboardItem)
+                {
                     dataGridViewRow.Height = clipboardItem.GetHeight();
+                }
+            }
         }
 
         private void SaveClipboardItems()
@@ -287,6 +300,12 @@ namespace SuperCopyPaste
                     Application.Restart();
                     Environment.Exit(0);
                     break;
+                case PowerModes.StatusChange:
+                    break;
+                case PowerModes.Suspend:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

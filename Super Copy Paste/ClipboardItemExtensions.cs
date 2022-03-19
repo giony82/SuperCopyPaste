@@ -1,9 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using SuperCopyPaste.Constants;
+using SuperCopyPaste.Core;
 using SuperCopyPaste.Models;
 
-namespace SuperCopyPaste.Core
+namespace SuperCopyPaste
 {
     public static class ClipboardItemExtensions
     {
@@ -17,6 +19,8 @@ namespace SuperCopyPaste.Core
                 case ClipboardType.Image:
                     Clipboard.SetImage((Image)clipboardItem.Data.Image);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

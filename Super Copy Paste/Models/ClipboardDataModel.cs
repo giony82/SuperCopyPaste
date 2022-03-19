@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using SuperCopyPaste.Core;
 
 namespace SuperCopyPaste.Models
@@ -8,7 +9,7 @@ namespace SuperCopyPaste.Models
     {
         public string Text { get; set; }
 
-        public object Image { get; set; }
+        public Bitmap Image { get; set; }
 
         public ClipboardType ClipboardType => Image != null ? ClipboardType.Image : ClipboardType.Text;
     }

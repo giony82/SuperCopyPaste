@@ -54,14 +54,14 @@ namespace SuperCopyPaste
             this.currentRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.totalRecordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new SuperCopyPaste.Controls.PanelEx();
+            this.panel = new SuperCopyPaste.Controls.PanelEx();
             this.txtBox = new SuperCopyPaste.Controls.CueTextBox();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             this.menuStrip.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView
@@ -251,19 +251,18 @@ namespace SuperCopyPaste
             this.exitToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // panel1
+            // panel
             // 
-            this.panel1.BackColor = System.Drawing.Color.Gray;
-            this.panel1.Controls.Add(this.dataGridView);
-            this.panel1.Controls.Add(this.menuStrip);
-            this.panel1.Controls.Add(this.txtBox);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(3);
-            this.panel1.Size = new System.Drawing.Size(985, 573);
-            this.panel1.TabIndex = 3;
-            this.panel1.Useoptimiziaton = true;
+            this.panel.BackColor = System.Drawing.Color.Gray;
+            this.panel.Controls.Add(this.dataGridView);
+            this.panel.Controls.Add(this.menuStrip);
+            this.panel.Controls.Add(this.txtBox);
+            this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel.Location = new System.Drawing.Point(0, 0);
+            this.panel.Name = "panel";
+            this.panel.Padding = new System.Windows.Forms.Padding(3);
+            this.panel.Size = new System.Drawing.Size(985, 573);
+            this.panel.TabIndex = 3;
             // 
             // txtBox
             // 
@@ -289,7 +288,8 @@ namespace SuperCopyPaste
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 573);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.ShowIcon = false;
@@ -302,8 +302,8 @@ namespace SuperCopyPaste
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panel.ResumeLayout(false);
+            this.panel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -325,7 +325,7 @@ namespace SuperCopyPaste
         private DataGridViewRolloverCellColumn Data;
         private System.Windows.Forms.DataGridViewTextBoxColumn createdDataGridViewTextBoxColumn;
         private System.Windows.Forms.ToolStripMenuItem currentRecordsToolStripMenuItem;
-        private PanelEx panel1;
+        private PanelEx panel;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem pinToolStripMenuItem;

@@ -255,7 +255,8 @@
     </Compile>
     <Compile Include="Core\ClipboardChangedEventArgs.cs" />
     <Compile Include="Constants\ClipboardConstants.cs" />
-    <Compile Include="Core\ClipboardItemExtensions.cs" />
+    <Compile Include="ClipboardItemExtensions.cs" />
+    <Compile Include="Storage\ImageConverter.cs" />
     <Compile Include="Models\ClipboardDataModel.cs" />
     <Compile Include="Core\ClipboardType.cs" />
     <Compile Include="Controls\CueTextBox.cs">
@@ -270,7 +271,7 @@
     <Compile Include="DataGridViewCustomCell.cs" />
     <Compile Include="Core\ClipboardDataManagement.cs" />
     <Compile Include="DataGridViewRolloverCellColumn.cs" />
-    <Compile Include="JSONFileClipboardStorage.cs" />
+    <Compile Include="Storage\JSONFileClipboardStorage.cs" />
     <Compile Include="Interfaces\IClipboardStorage.cs" />
     <Compile Include="Keyboard\KeyboardHook.cs" />
     <Compile Include="Keyboard\KeyPressedEventArgs.cs" />

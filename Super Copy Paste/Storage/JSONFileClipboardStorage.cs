@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using SuperCopyPaste.Interfaces;
 
-namespace SuperCopyPaste
+namespace SuperCopyPaste.Storage
 {
     public class JSONFileClipboardStorage : IClipboardStorage
     {
@@ -16,18 +16,14 @@ namespace SuperCopyPaste
         /// <returns>Returns a new instance of the object read from the JSON file.</returns>
         public T Read<T>() where T : new()
         {
-            if (!File.Exists(StorageFile))
-            {
-                return new T();
-            }
+            if (!File.Exists(StorageFile)) return new T();
             var serializer = new JsonSerializer();
+            serializer.Converters.Add(new ImageConverter());
 
             using (TextReader stream = new StreamReader(StorageFile))
             {
                 using (JsonReader reader = new JsonTextReader(stream))
                 {
-                    // read the json from a stream
-                    // json size doesn't matter because only a small piece is read at a time from the HTTP request
                     var result = serializer.Deserialize<T>(reader);
                     return result;
                 }
@@ -42,12 +38,11 @@ namespace SuperCopyPaste
         public void Write<T>(T objectToWrite)
         {
             var serializer = new JsonSerializer();
+            serializer.Converters.Add(new ImageConverter());
             using (TextWriter stream = new StreamWriter(StorageFile))
             {
                 using (var reader = new JsonTextWriter(stream))
                 {
-                    // read the json from a stream
-                    // json size doesn't matter because only a small piece is read at a time from the HTTP request
                     serializer.Serialize(reader, objectToWrite);
                 }
             }
